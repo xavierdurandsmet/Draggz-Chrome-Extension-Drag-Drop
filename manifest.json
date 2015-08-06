@@ -14,7 +14,19 @@
     "default_title": "Title Changer"
   },
   "permissions": [
-    "activeTab"
+    "webNavigation",
+    "*://*/*"
   ],
+  "content_scripts": [    
+       {
+           "matches": [
+               "http://*/*",
+               "https://*/*"
+           ],
+           "js": ["content.js"],
+           "all_frames": true,
+           "run_at": "document_idle"
+       }
+   ],
   "manifest_version": 2
 }
