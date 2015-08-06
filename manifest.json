@@ -15,7 +15,9 @@
   },
   "permissions": [
     "webNavigation",
-    "*://*/*"
+    "*://*/*",
+    "storage",
+    "unlimitedStorage"
   ],
   "content_scripts": [    
        {
@@ -23,7 +25,7 @@
                "http://*/*",
                "https://*/*"
            ],
-           "js": ["content.js"],
+           "js": ["interact.js", "content.js"],
            "all_frames": true,
            "run_at": "document_idle"
        }
