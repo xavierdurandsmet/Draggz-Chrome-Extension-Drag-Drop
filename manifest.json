@@ -15,7 +15,8 @@
     "*://*/*",
     "storage",
     "unlimitedStorage",
-    "tabs"
+    "tabs",
+    "http://127.0.0.1:8000/"
   ],
   "content_scripts": [    
        {
@@ -23,10 +24,11 @@
                "http://*/*",
                "https://*/*"
            ],
-           "js": ["interact.js", "content.js"],
+           "js": ["interact.js", "jquery.min.js", "content.js"],
            "all_frames": true,
            "run_at": "document_idle"
        }
    ],
+   "web_accessible_resources": ["jquery.min.map"],
   "manifest_version": 2
 }

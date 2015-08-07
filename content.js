@@ -1,3 +1,5 @@
+
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 	// tagArr of all tags
@@ -23,18 +25,32 @@ chrome.runtime.onMessage.addListener(
 	if (request.button == "saveChanges") {
 			var entireHTML = document.documentElement.outerHTML;
 			var urlPage = window.location.href;
+			urlPage = urlPage.replace(/\//g, "+")
+			console.log("asdasd", urlPage);
+			$.post("http://127.0.0.1:8000/", {url: urlPage, changesAvailable: entireHTML}).done(function(dat, one, two){
+					console.log("done", dat);
+					console.log("done", one);
+					console.log("done", two);
+				})
+			console.log("ASDasd");
 			localStorage.setItem(urlPage, entireHTML);
-			var retrievedObject = localStorage.getItem(urlPage);
-			console.log('retrievedObject: ', retrievedObject);
+			
+			//var retrievedObject = localStorage.getItem(urlPage);
+			//console.log('retrievedObject: ', retrievedObject);
 	}
 	if (request.button == "getOldChanges") {
 		var urlPage = window.location.href;
-		if (localStorage.getItem(urlPage) === null) {
-	  		console.log('no changes yet buddy!')
-		}
-		else {
-			document.documentElement.innerHTML = localStorage.getItem(urlPage);
-		}
+		urlPage = urlPage.replace(/\//g, "+")
+		$.get("http://127.0.0.1:8000/"+urlPage,function(changedDOM){
+				console.log('changedDOM',changedDOM)
+				document.documentElement.innerHTML = changedDOM[2]
+			})
+		// if (localStorage.getItem(urlPage) === null) {
+	 //  		console.log('no changes yet buddy!')
+		// }
+		// else {
+		// 	document.documentElement.innerHTML = localStorage.getItem(urlPage);
+		// }
 	}
 })
 
