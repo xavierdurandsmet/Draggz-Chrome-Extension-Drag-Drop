@@ -1,70 +1,58 @@
-var newDom;
 
-chrome.storage.local.get("allNodesArr",function(data){
-	//if (!data) 
-	newDom = data;
-	console.log('refresh check', newDom)
-		})
-// tagArr of all tags
-var tagArr = Array.prototype.slice.call(document.getElementsByTagName("*"));
 
-// button that saves the changes to the DOM
-var buttonSave = document.createElement('button');
-buttonSave.innerHTML = "get tags"
-buttonSave.style.position = "absolute";
-		buttonSave.style.position = "fixed";
-		buttonSave.style.zIndex = "10";
-		buttonSave.style.top = "70px";
-buttonSave.onclick = function () {
-	var finalArr = [];
-	for (var i = 0; i < tagArr.length ; i++) {
-		//console.log('hit first')
-		var node = {
-			"nodeName": tagArr[i].tagName,
-			"attributeName": [],
-			"attributeValue": []
-			}
-		var allAttributesOfTag = Array.prototype.slice.call(tagArr[i].attributes)
-		for (var j = 0; j < allAttributesOfTag.length; j++) {
-			//console.log('hit second');
-			node.attributeName.push(allAttributesOfTag[j].nodeName);
-			node.attributeValue.push(allAttributesOfTag[j].nodeValue);
-		}
-		//console.log('hit third')
-		finalArr.push(node)
-	}
-	console.log('FINAL ARRRRRRAAAAY', finalArr)
-	chrome.storage.local.set({"allNodesArr": finalArr},function(){
-		chrome.storage.local.get("allNodesArr",function(data){
-			console.log('got?', data)
-		})
-		console.log('SAVED NODES')
-	})
-}
-document.body.appendChild(buttonSave);
-
-	var newNode = document.createElement('button');
-		newNode.innerHTML = "DRAGGABLE"
-		newNode.style.position = "absolute";
-		newNode.style.position = "fixed";
-		newNode.style.zIndex = "10";
-		newNode.style.top = "50px";
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+	// tagArr of all tags
 	var dragged = false;
-	newNode.onclick = function() {
-		console.log("dragging?",tagArr)
-		if (dragged === false) {
-		    for (var i = 0; i < tagArr.length ; i++) {
-		    	tagArr[i].classList.add("draggable");
-		    }
-		    dragged = true;
-		} else {
-			for (var i = 0; i < tagArr.length ; i++) {
-		    	tagArr[i].classList.remove("draggable");
-		    }
-		    dragged = false;
+	var tagArr = Array.prototype.slice.call(document.getElementsByTagName("*"));
+    console.log(sender.tab ?
+                "from a content script:" + sender.tab.url :
+                "from the extension");
+    if (request.button == "draggable") {
+    		console.log('DRAGGABLE')
+			if (dragged === false) {
+			    for (var i = 0; i < tagArr.length ; i++) {
+			    	tagArr[i].classList.add("draggable");
+			    }
+			    dragged = true;
+			} else {
+				for (var i = 0; i < tagArr.length ; i++) {
+			    	tagArr[i].classList.remove("draggable");
+			    }
+			    dragged = false;
 		}
 	}
-document.body.appendChild(newNode);
+	if (request.button == "saveChanges") {
+			var entireHTML = document.documentElement.outerHTML;
+			var urlPage = window.location.href;
+			urlPage = urlPage.replace(/\//g, "+")
+			console.log("asdasd", urlPage);
+			$.post("http://127.0.0.1:8000/", {url: urlPage, changesAvailable: entireHTML}).done(function(dat, one, two){
+					console.log("done", dat);
+					console.log("done", one);
+					console.log("done", two);
+				})
+			console.log("ASDasd");
+			localStorage.setItem(urlPage, entireHTML);
+			
+			//var retrievedObject = localStorage.getItem(urlPage);
+			//console.log('retrievedObject: ', retrievedObject);
+	}
+	if (request.button == "getOldChanges") {
+		var urlPage = window.location.href;
+		urlPage = urlPage.replace(/\//g, "+")
+		$.get("http://127.0.0.1:8000/"+urlPage,function(changedDOM){
+				console.log('changedDOM',changedDOM)
+				document.documentElement.innerHTML = changedDOM[2]
+			})
+		// if (localStorage.getItem(urlPage) === null) {
+	 //  		console.log('no changes yet buddy!')
+		// }
+		// else {
+		// 	document.documentElement.innerHTML = localStorage.getItem(urlPage);
+		// }
+	}
+})
 
 
 

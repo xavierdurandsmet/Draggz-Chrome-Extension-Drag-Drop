@@ -2,22 +2,21 @@
   "name": "DOM manipulation Example",
   "version": "1.0",
   "description": "Chrome Extension Example for manipulating DOM.",
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["content.js"]
-  }],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
   },
   "browser_action": {
-    "default_title": "Title Changer"
+    "default_title": "Dragg'z",
+    "default_popup": "popup.html"
   },
   "permissions": [
     "webNavigation",
     "*://*/*",
     "storage",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "tabs",
+    "http://127.0.0.1:8000/"
   ],
   "content_scripts": [    
        {
@@ -25,10 +24,11 @@
                "http://*/*",
                "https://*/*"
            ],
-           "js": ["interact.js", "content.js"],
+           "js": ["interact.js", "jquery.min.js", "content.js"],
            "all_frames": true,
            "run_at": "document_idle"
        }
    ],
+   "web_accessible_resources": ["jquery.min.map"],
   "manifest_version": 2
 }
