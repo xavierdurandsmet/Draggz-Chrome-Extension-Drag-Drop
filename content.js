@@ -5,11 +5,8 @@ chrome.runtime.onMessage.addListener(
 	// tagArr of all tags
 	var dragged = false;
 	var tagArr = Array.prototype.slice.call(document.getElementsByTagName("*"));
-    console.log(sender.tab ?
-                "from a content script:" + sender.tab.url :
-                "from the extension");
     if (request.button == "draggable") {
-    		console.log('DRAGGABLE')
+    		// console.log('DRAGGABLE')
 			if (dragged === false) {
 			    for (var i = 0; i < tagArr.length ; i++) {
 			    	tagArr[i].classList.add("draggable");
@@ -22,36 +19,42 @@ chrome.runtime.onMessage.addListener(
 			    dragged = false;
 		}
 	}
-	if (request.button == "saveChanges") {
+	if (request.button == "addNew") {
 			var entireHTML = document.documentElement.outerHTML;
 			var urlPage = window.location.href;
 			urlPage = urlPage.replace(/\//g, "+")
-			console.log("asdasd", urlPage);
-			$.post("http://127.0.0.1:8000/", {url: urlPage, changesAvailable: entireHTML}).done(function(dat, one, two){
-					console.log("done", dat);
-					console.log("done", one);
-					console.log("done", two);
+			console.log('AJAX ONCE OR TWICE????!!!!!!')
+			$.post("http://127.0.0.1:8000/", {url: urlPage, changesAvailable: entireHTML}, function () {
+				console.log('AJAX INSIDE CB ONCE OR TWICE????!!!!!!')
+				sendResponse({done: "I'm done"})
+			}).done(function(dat, one, two){
+					// console.log("done", dat);
+					// console.log("done", one);
+					// console.log("done", two);
 				})
-			console.log("ASDasd");
-			localStorage.setItem(urlPage, entireHTML);
-			
-			//var retrievedObject = localStorage.getItem(urlPage);
-			//console.log('retrievedObject: ', retrievedObject);
+			// localStorage.setItem(urlPage, entireHTML);
 	}
 	if (request.button == "getOldChanges") {
 		var urlPage = window.location.href;
 		urlPage = urlPage.replace(/\//g, "+")
 		$.get("http://127.0.0.1:8000/"+urlPage,function(changedDOM){
-				console.log('changedDOM',changedDOM)
-				document.documentElement.innerHTML = changedDOM[0]
+				console.log('changedDOM.length after get request',changedDOM.length)
+				document.documentElement.innerHTML = changedDOM[request.index]
 			})
-		// if (localStorage.getItem(urlPage) === null) {
-	 //  		console.log('no changes yet buddy!')
-		// }
-		// else {
-		// 	document.documentElement.innerHTML = localStorage.getItem(urlPage);
-		// }
 	}
+
+	if (request.getAllButtons == "getAll") {
+		// console.log('INSIDE THE IF for get ALL buttons')
+		var urlPage = window.location.href;
+		urlPage = urlPage.replace(/\//g, "+")
+		console.log('ssnding get request NOW!')
+		$.get("http://127.0.0.1:8000/"+urlPage).then(function(data){
+				console.log('in response of GetALL',data.length)
+				sendResponse({allChanges: data})
+			})
+
+	}
+	return true
 })
 
 
