@@ -3,15 +3,30 @@
   <head>
     <title>Custom Site Options</title>
   </head>
-  <body>
+  <body ng-app="myDraggzApp" ng-csp>
+    <div ng-controller="ButtonCtrl">
     <h1>Custom Site Options</h1>
     <button id="draggable" class="btn-info">drag</button>
-    <button id="saveChanges" class="btn-info">saveChanges</button>
+    <button id="saveChanges" class="btn-info" ng-click="addNewChange()">save changes and create model</button>
+    <button id="makeButtons" class="btn-info" ng-click="getButtons()">Get all models buttons</button>
+
+    <div ng-repeat="button in buttons track by $index">
+      <button class="btn-info" ng-click="loadChangedDOM($index)">Get Model # {{$index}}</button>
+    </div>
+
+
     <button id="getOldChanges" class="btn-info">getOldChanges</button>
-    <script src="popup.js"></script>
+  </div>
+
+
+
+
     <!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="bower_components/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="popup.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="bower_components/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="popup.js"></script>
   </body>
 </html>

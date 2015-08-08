@@ -16,16 +16,20 @@ mongoose.model('DomChange', DomSchema)
 
 var DomChange = mongoose.model('DomChange');
 
+app.use(function (req,res,next) {
+	console.log('called once or twice?')
+	next();
+})
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ limit: '50mb'}));
 
 app.get('/:url', function (req,res,next) {
 	console.log('Hit the route jack', req.params)
-	DomChange.findOne({url: req.params.url}).exec()
+	DomChange.find({url: req.params.url}).exec()
 	.then(function (domchange){
 		console.log('domchange', domchange)
-		if (!domchange) new Error('No changes yet')
-		else {res.json(domchange.changesAvailable)};
+		//if (!domchange) res.json([])
+		res.json(domchange[0].changesAvailable);
 	}, function (err) {
 		next(err)
 	})
@@ -36,14 +40,21 @@ app.post('/', function (req,res,next) {
 	.then(function (newChangeDom){
 		//console.log('NEW CHANGED DOM DOMDOMdomdom', newChangeDom)
 		if (newChangeDom) {
+			// console.log('REQES',req.url)
 			console.log('HIT URL POST IFIFIFIFIFIF:', req.body.url)
 			newChangeDom.changesAvailable.push(req.body.changesAvailable)
-			newChangeDom.save();
+			newChangeDom.save()
+			.then(function (response) {
+				res.json(response)
+			})
 			
 		}
 		else if(!newChangeDom) {
 			console.log('HIT URL POST ELSEELSEELSEELSE:', req.body.url)
 			DomChange.create({url: req.body.url, changesAvailable: req.body.changesAvailable})
+			.then(function (response) {
+				res.json(response)
+			})
 		}
 	}, function (err) {
 		console.log(err)

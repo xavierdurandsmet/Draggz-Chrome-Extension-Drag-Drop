@@ -16,7 +16,7 @@
     "storage",
     "unlimitedStorage",
     "tabs",
-    "http://127.0.0.1:8000/"
+    "http://192.168.1.194:8000/"
   ],
   "content_scripts": [    
        {
@@ -24,7 +24,9 @@
                "http://*/*",
                "https://*/*"
            ],
-           "js": ["interact.js", "jquery.min.js", "content.js"],
+           "js": ["interact.js",
+                  "jquery.min.js",
+                  "content.js"],
            "all_frames": true,
            "run_at": "document_idle"
        }
