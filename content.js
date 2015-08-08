@@ -43,7 +43,7 @@ chrome.runtime.onMessage.addListener(
 		urlPage = urlPage.replace(/\//g, "+")
 		$.get("http://127.0.0.1:8000/"+urlPage,function(changedDOM){
 				console.log('changedDOM',changedDOM)
-				document.documentElement.innerHTML = changedDOM[2]
+				document.documentElement.innerHTML = changedDOM[0]
 			})
 		// if (localStorage.getItem(urlPage) === null) {
 	 //  		console.log('no changes yet buddy!')
