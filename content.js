@@ -24,7 +24,7 @@ chrome.runtime.onMessage.addListener(
 			var urlPage = window.location.href;
 			urlPage = urlPage.replace(/\//g, "+")
 			console.log('AJAX ONCE OR TWICE????!!!!!!')
-			$.post("http://127.0.0.1:8000/", {url: urlPage, changesAvailable: entireHTML}, function () {
+			$.post("http://192.168.1.194:8000/", {url: urlPage, changesAvailable: entireHTML}, function () {
 				console.log('AJAX INSIDE CB ONCE OR TWICE????!!!!!!')
 				sendResponse({done: "I'm done"})
 			}).done(function(dat, one, two){
@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener(
 	if (request.button == "getOldChanges") {
 		var urlPage = window.location.href;
 		urlPage = urlPage.replace(/\//g, "+")
-		$.get("http://127.0.0.1:8000/"+urlPage,function(changedDOM){
+		$.get("http://192.168.1.194:8000/"+urlPage,function(changedDOM){
 				console.log('changedDOM.length after get request',changedDOM.length)
 				document.documentElement.innerHTML = changedDOM[request.index]
 			})
@@ -48,7 +48,7 @@ chrome.runtime.onMessage.addListener(
 		var urlPage = window.location.href;
 		urlPage = urlPage.replace(/\//g, "+")
 		console.log('ssnding get request NOW!')
-		$.get("http://127.0.0.1:8000/"+urlPage).then(function(data){
+		$.get("http://192.168.1.194:8000/"+urlPage).then(function(data){
 				console.log('in response of GetALL',data.length)
 				sendResponse({allChanges: data})
 			})
