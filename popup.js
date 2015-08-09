@@ -11,6 +11,9 @@ app.controller('ButtonCtrl', function ($scope, ButtonFactory, $rootScope) {
 	$scope.getButtons = function(){
 		ButtonFactory.getAllButtons()
 	}
+	$scope.deleteOne = function (idx) {
+		ButtonFactory.deleteOne(idx)
+	}
 	$scope.loadChangedDOM = function(idx){
 			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 				chrome.tabs.sendMessage(tabs[0].id, {button: 'getOldChanges', index: idx}, function(response) {
@@ -46,6 +49,16 @@ app.factory('ButtonFactory', function ($rootScope) {
 			    	return response;
 			  });
 			});
+		},
+		deleteOne : function (idx) {
+			console.log('in deleteOne Factory, and idx is,', idx)
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+			  chrome.tabs.sendMessage(tabs[0].id, {button: 'deleteOne', index: idx}, function(response) {
+			  	console.log('in deleteOne factory, response',response)
+			  	$rootScope.$digest()
+			    	return response;
+			  });
+			});
 		}
 	}
 })
@@ -67,19 +80,3 @@ dragButton.onclick = function () {
 	  });
 	});
 }
-
-// saveChanges.onclick = function () {
-// 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-// 	  chrome.tabs.sendMessage(tabs[0].id, {button: 'saveChanges'}, function(response) {
-// 	    console.log(response.farewell);
-// 	  });
-// 	});
-// }
-
-// getOldChanges.onclick = function () {
-// 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-// 	  chrome.tabs.sendMessage(tabs[0].id, {button: 'getOldChanges'}, function(response) {
-// 	    console.log(response.farewell);
-// 	  });
-// 	});
-// }

@@ -3,28 +3,68 @@
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 	// tagArr of all tags
-	var dragged = false;
 	var tagArr = Array.prototype.slice.call(document.getElementsByTagName("*"));
+
+	// create put Ajax put request method
+	$.put = function(url, data, callback, type){
+	  if ( $.isFunction(data) ){
+	    type = type || callback,
+	    callback = data,
+	    data = {}
+	  }
+	  return $.ajax({
+	    url: url,
+	    type: 'PUT',
+	    success: callback,
+	    data: data,
+	    contentType: type
+	  });
+	}
+
+
     if (request.button == "draggable") {
     		// console.log('DRAGGABLE')
-			if (dragged === false) {
+    		// document.body.addEventListener('click', function(e) {
+    		// 	console.log(e)
+    		// 	e.stopPropagation()}, true); 
+			// $(document.body).click(function(e) {
+			//     alert('Hi I am bound to the body!');
+			//     e.stopPropagation()
+			// });
+			if (Array.prototype.slice.call(tagArr[0].classList).indexOf("draggable") === -1) {
 			    for (var i = 0; i < tagArr.length ; i++) {
 			    	tagArr[i].classList.add("draggable");
+			    	tagArr[i].style.border = "2px solid red";
+			    	tagArr[i].style.borderStyle = "dotted";
+			    		// tagArr[i].onclick = function (e) {
+			    		// console.log('onclick exists for this node', e)
+			    		// 	e.stopPropagation();
+			    		// }
+			    	// if (tagArr[i].onclick) {
+			    	// 	tagArr[i].onclick.stopPropagation();}
 			    }
-			    dragged = true;
 			} else {
 				for (var i = 0; i < tagArr.length ; i++) {
 			    	tagArr[i].classList.remove("draggable");
+			    	tagArr[i].style.border = "";
+			    	tagArr[i].style.borderStyle = "";
 			    }
-			    dragged = false;
 		}
 	}
 	if (request.button == "addNew") {
+		// if user did not undrag elements 
+		if (Array.prototype.slice.call(tagArr[0].classList).indexOf("draggable") !== -1) {
+			for (var i = 0; i < tagArr.length ; i++) {
+			    	tagArr[i].classList.remove("draggable");
+			    	tagArr[i].style.border = "";
+			    	tagArr[i].style.borderStyle = "";
+			    }
+		}
 			var entireHTML = document.documentElement.outerHTML;
 			var urlPage = window.location.href;
 			urlPage = urlPage.replace(/\//g, "+")
 			console.log('AJAX ONCE OR TWICE????!!!!!!')
-			$.post("http://192.168.1.194:8000/", {url: urlPage, changesAvailable: entireHTML}, function () {
+			$.post("http://192.168.0.4:8000/", {url: urlPage, changesAvailable: entireHTML}, function () {
 				console.log('AJAX INSIDE CB ONCE OR TWICE????!!!!!!')
 				sendResponse({done: "I'm done"})
 			}).done(function(dat, one, two){
@@ -37,7 +77,7 @@ chrome.runtime.onMessage.addListener(
 	if (request.button == "getOldChanges") {
 		var urlPage = window.location.href;
 		urlPage = urlPage.replace(/\//g, "+")
-		$.get("http://192.168.1.194:8000/"+urlPage,function(changedDOM){
+		$.get("http://192.168.0.4:8000/"+urlPage,function(changedDOM){
 				console.log('changedDOM.length after get request',changedDOM.length)
 				document.documentElement.innerHTML = changedDOM[request.index]
 			})
@@ -48,8 +88,19 @@ chrome.runtime.onMessage.addListener(
 		var urlPage = window.location.href;
 		urlPage = urlPage.replace(/\//g, "+")
 		console.log('ssnding get request NOW!')
-		$.get("http://192.168.1.194:8000/"+urlPage).then(function(data){
+		$.get("http://192.168.0.4:8000/"+urlPage).then(function(data){
 				console.log('in response of GetALL',data.length)
+				sendResponse({allChanges: data})
+			})
+
+	}
+	if (request.button == "deleteOne") {
+		var urlPage = window.location.href;
+		urlPage = urlPage.replace(/\//g, "+")
+		console.log('ssnding get request NOW! and request.index is,', request.index)
+		$.put("http://192.168.0.4:8000/"+urlPage, {url: urlPage, stringToDeleteIndex: request.index})
+		.then(function(data){
+				console.log('in response of deleteOne',data.length)
 				sendResponse({allChanges: data})
 			})
 

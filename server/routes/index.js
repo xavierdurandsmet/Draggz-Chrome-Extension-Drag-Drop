@@ -16,10 +16,6 @@ mongoose.model('DomChange', DomSchema)
 
 var DomChange = mongoose.model('DomChange');
 
-app.use(function (req,res,next) {
-	console.log('called once or twice?')
-	next();
-})
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ limit: '50mb'}));
 
@@ -62,6 +58,17 @@ app.post('/', function (req,res,next) {
 	})
 })
 
+app.put('/:url', function (req,res,next) {
+	// var stringToDelete = req.body.changesAvailable;
+	DomChange.findOne({url: req.params.url})
+	.then(function (domChange) {
+		domChange.changesAvailable.splice(req.body.stringToDeleteIndex ,1);
+		domChange.save()
+		.then(function (newDomChange) {
+			res.json(newDomChange.changesAvailable)
+		})
+	})
+})
 
 
 
@@ -70,3 +77,8 @@ app.use(function (err, req, res, next) {
     console.error(err, typeof next);
     res.status(err.status || 500).send(err.message || 'Internal server error.');
 });
+
+
+
+
+
