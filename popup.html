@@ -6,13 +6,14 @@
   <body ng-app="myDraggzApp" ng-csp>
     <div ng-controller="ButtonCtrl">
     <h1>Custom Site Options</h1>
-    <button id="draggable" class="btn btn-default btn-lg">drag</button>
-    <button id="saveChanges" class="btn btn-default btn-lg" ng-click="addNewChange()">save changes and create model</button>
-    <button id="makeButtons" class="btn btn-default btn-lg" ng-click="getButtons()">Get all models buttons</button>
+    <button class="hidden"></button>
+    <button id="draggable" class="btn btn-default btn-main btn-lg" tabindex="-1">drag it</button>
+    <button id="saveChanges" class="btn btn-default btn-main btn-lg" ng-click="addNewChange()" tabindex="-1">save it</button>
+    <button id="makeButtons" class="btn btn-default btn-main btn-lg" ng-click="getButtons()" tabindex="-1">show it</button>
 
     <div ng-repeat="button in buttons track by $index">
         <div class="group">
-          <button class="btn btn-default btn-lg" ng-click="loadChangedDOM($index)">Get Model # {{$index}}</button>
+          <button class="btn btn-default btn-lg" ng-click="loadChangedDOM($index)">Structure #{{$index + 1}}</button>
           <button class="btn btn-circle" ng-click="deleteOne($index); getButtons()">X</button>
       </div>
     </div>
