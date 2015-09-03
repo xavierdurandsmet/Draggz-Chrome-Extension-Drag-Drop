@@ -1,7 +1,8 @@
-
+// var server = "http://yourserver.com";
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
+
 	// tagArr of all tags
 	var tagArr = Array.prototype.slice.call(document.getElementsByTagName("*"));
 
@@ -24,30 +25,14 @@ chrome.runtime.onMessage.addListener(
 	var backgroundColors = [];
 
     if (request.button == "draggable") {
-    		// console.log('DRAGGABLE')
-    		// document.body.addEventListener('click', function(e) {
-    		// 	console.log(e)
-    		// 	e.stopPropagation()}, true); 
-			// $(document.body).click(function(e) {
-			//     alert('Hi I am bound to the body!');
-			//     e.stopPropagation()
-			// });
+
 			if (Array.prototype.slice.call(tagArr[0].classList).indexOf("draggable") === -1) {
 			    for (var i = 0; i < tagArr.length ; i++) {
 			    	tagArr[i].classList.add("draggable");
 			    	tagArr[i].style.border = "2px solid #42dca3";
 			    	tagArr[i].style.borderStyle = "dotted";
-			    	// backgroundColors.push(tagArr[i].style.backgroundColor);
-			    	// tagArr[i].style.backgroundColor = "#000";
-			    		// tagArr[i].onclick = function (e) {
-			    		// console.log('onclick exists for this node', e)
-			    		// 	e.stopPropagation();
-			    		// }
-			    	// if (tagArr[i].onclick) {
-			    	// 	tagArr[i].onclick.stopPropagation();}
 			    }
 			} else {
-				console.log('backgroundColors', backgroundColors)
 				for (var i = 0; i < tagArr.length ; i++) {
 			    	tagArr[i].classList.remove("draggable");
 			    	tagArr[i].style.border = "";
@@ -57,6 +42,7 @@ chrome.runtime.onMessage.addListener(
 		}
 	}
 	if (request.button == "addNew") {
+
 		// if user did not undrag elements 
 		if (Array.prototype.slice.call(tagArr[0].classList).indexOf("draggable") !== -1) {
 			for (var i = 0; i < tagArr.length ; i++) {
@@ -68,32 +54,32 @@ chrome.runtime.onMessage.addListener(
 			var entireHTML = document.documentElement.outerHTML;
 			var urlPage = window.location.href;
 			urlPage = urlPage.replace(/\//g, "+")
-			console.log('AJAX ONCE OR TWICE????!!!!!!')
-			$.post("http://192.168.1.194:8000/", {url: urlPage, changesAvailable: entireHTML}, function () {
-				console.log('AJAX INSIDE CB ONCE OR TWICE????!!!!!!')
-				sendResponse({done: "I'm done"})
-			}).done(function(dat, one, two){
-					// console.log("done", dat);
-					// console.log("done", one);
-					// console.log("done", two);
-				})
-			// localStorage.setItem(urlPage, entireHTML);
+			// hardcoded server IP
+				$.post('http://192.168.1.11:8000/', {url: urlPage, changesAvailable: entireHTML}, function () {
+					sendResponse({done: "I'm done"})
+				}).done(function(dat, one, two){
+					})
+
+			// added local storage
+			localStorage.setItem(urlPage, entireHTML);
+			sendResponse({done: "I'm done"})
 	}
 	if (request.button == "getOldChanges") {
 		var urlPage = window.location.href;
 		urlPage = urlPage.replace(/\//g, "+")
-		$.get("http://192.168.1.194:8000/"+urlPage,function(changedDOM){
+		// hardcoded server IP
+		$.get("http://192.168.1.11:8000/"+urlPage,function(changedDOM){
 				console.log('changedDOM.length after get request',changedDOM.length)
 				document.documentElement.innerHTML = changedDOM[request.index]
 			})
 	}
 
 	if (request.getAllButtons == "getAll") {
-		// console.log('INSIDE THE IF for get ALL buttons')
 		var urlPage = window.location.href;
 		urlPage = urlPage.replace(/\//g, "+")
 		console.log('ssnding get request NOW!')
-		$.get("http://192.168.1.194:8000/"+urlPage).then(function(data){
+		// hardcoded server IP
+		$.get("http://192.168.1.11:8000/"+urlPage).then(function(data){
 				console.log('in response of GetALL',data.length)
 				sendResponse({allChanges: data})
 			})
@@ -103,7 +89,8 @@ chrome.runtime.onMessage.addListener(
 		var urlPage = window.location.href;
 		urlPage = urlPage.replace(/\//g, "+")
 		console.log('ssnding get request NOW! and request.index is,', request.index)
-		$.put("http://192.168.1.194:8000/"+urlPage, {url: urlPage, stringToDeleteIndex: request.index})
+		// hardcoded server IP
+		$.put("http://192.168.1.11:8000/"+urlPage, {url: urlPage, stringToDeleteIndex: request.index})
 		.then(function(data){
 				console.log('in response of deleteOne',data.length)
 				sendResponse({allChanges: data})
