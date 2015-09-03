@@ -1,4 +1,4 @@
-// var server = "http://yourserver.com";
+var server = "https://evening-springs-6953.herokuapp.com/";
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener(
 			var urlPage = window.location.href;
 			urlPage = urlPage.replace(/\//g, "+")
 			// hardcoded server IP
-				$.post('http://192.168.1.11:8000/', {url: urlPage, changesAvailable: entireHTML}, function () {
+				$.post(server, {url: urlPage, changesAvailable: entireHTML}, function () {
 					sendResponse({done: "I'm done"})
 				}).done(function(dat, one, two){
 					})
@@ -68,7 +68,7 @@ chrome.runtime.onMessage.addListener(
 		var urlPage = window.location.href;
 		urlPage = urlPage.replace(/\//g, "+")
 		// hardcoded server IP
-		$.get("http://192.168.1.11:8000/"+urlPage,function(changedDOM){
+		$.get(server + urlPage,function(changedDOM){
 				console.log('changedDOM.length after get request',changedDOM.length)
 				document.documentElement.innerHTML = changedDOM[request.index]
 			})
@@ -79,7 +79,7 @@ chrome.runtime.onMessage.addListener(
 		urlPage = urlPage.replace(/\//g, "+")
 		console.log('ssnding get request NOW!')
 		// hardcoded server IP
-		$.get("http://192.168.1.11:8000/"+urlPage).then(function(data){
+		$.get(server + urlPage).then(function(data){
 				console.log('in response of GetALL',data.length)
 				sendResponse({allChanges: data})
 			})
@@ -90,7 +90,7 @@ chrome.runtime.onMessage.addListener(
 		urlPage = urlPage.replace(/\//g, "+")
 		console.log('ssnding get request NOW! and request.index is,', request.index)
 		// hardcoded server IP
-		$.put("http://192.168.1.11:8000/"+urlPage, {url: urlPage, stringToDeleteIndex: request.index})
+		$.put(server + urlPage, {url: urlPage, stringToDeleteIndex: request.index})
 		.then(function(data){
 				console.log('in response of deleteOne',data.length)
 				sendResponse({allChanges: data})
