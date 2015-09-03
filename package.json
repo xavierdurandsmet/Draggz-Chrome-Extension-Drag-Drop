@@ -1,5 +1,8 @@
 {
   "name": "Dragg'z",
   "version": "1.0.0",
-  "description": "DOM Drag and Drop"
+  "description": "DOM Drag and Drop",
+  "scripts": {
+  	"start": "node ./server/start.js"
+  }
 }
