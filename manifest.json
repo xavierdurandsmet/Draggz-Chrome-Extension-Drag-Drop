@@ -10,6 +10,10 @@
     "persistent": false
   },
   "browser_action": {
+    "default_icon": {
+        "19": "iconExtension.png",
+        "38": "iconExtension.png"
+      },
     "default_title": "Dragg'z",
     "default_popup": "popup.html"
   },

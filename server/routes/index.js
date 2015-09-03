@@ -4,7 +4,7 @@ module.exports = app;
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
-var db = mongoose.connect('mongodb://localhost/draggz');
+var db = mongoose.connect('mongodb://xavier:draggz@ds035603.mongolab.com:35603/draggzdb');
 
 var DomSchema = new mongoose.Schema({
     url: String,
@@ -20,10 +20,8 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ limit: '50mb'}));
 
 app.get('/:url', function (req,res,next) {
-	console.log('Hit the route jack', req.params)
 	DomChange.find({url: req.params.url}).exec()
 	.then(function (domchange){
-		// console.log('domchange', domchange)
 		//if (!domchange) res.json([])
 		res.json(domchange[0].changesAvailable);
 	}, function (err) {
@@ -34,10 +32,7 @@ app.get('/:url', function (req,res,next) {
 app.post('/', function (req,res,next) {
 	DomChange.findOne({url: req.body.url}).exec()
 	.then(function (newChangeDom){
-		//console.log('NEW CHANGED DOM DOMDOMdomdom', newChangeDom)
 		if (newChangeDom) {
-			// console.log('REQES',req.url)
-			// console.log('HIT URL POST IFIFIFIFIFIF:', req.body.url)
 			newChangeDom.changesAvailable.push(req.body.changesAvailable)
 			newChangeDom.save()
 			.then(function (response) {
@@ -46,7 +41,6 @@ app.post('/', function (req,res,next) {
 			
 		}
 		else if(!newChangeDom) {
-			// console.log('HIT URL POST ELSEELSEELSEELSE:', req.body.url)
 			DomChange.create({url: req.body.url, changesAvailable: req.body.changesAvailable})
 			.then(function (response) {
 				res.json(response)

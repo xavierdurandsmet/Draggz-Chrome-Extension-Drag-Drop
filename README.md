@@ -13,5 +13,4 @@ Interact.js to enable the drag and drop functionality.
 
 jQuery ajax requests send site modifications to a MongoDb back end.
 
-The design and functionality of the extension pop-up was implemented with
-Angular JS for its dynamic HTML interaction.
+The design and functionality of the extension pop-up was implemented with Angular JS for its dynamic HTML interaction.
