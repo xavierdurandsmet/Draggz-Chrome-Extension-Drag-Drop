@@ -8,8 +8,10 @@ modifications.
 
 ## Technologies used
 
-Dragg'z uses the Google Chrome API to interface with websites.
-Interact.js is used to enable the drag and drop interface.
+Dragg'z uses the Google Chrome API to interface with websites and 
+Interact.js to enable the drag and drop functionality.
+
 jQuery ajax requests send site modifications to a MongoDb back end.
+
 The design and functionality of the extension pop-up was implemented with
-Angular JS which allows convient 
+Angular JS 
