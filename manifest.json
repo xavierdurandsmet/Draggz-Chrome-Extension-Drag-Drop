@@ -1,6 +1,6 @@
 {
   "name": "Draggz",
-  "version": "1.0",
+  "version": "1.0.0.1",
   "description": "Chrome Extension Example for manipulating DOM.",
   "icons": { "16": "iconExtension.png",
              "48": "iconExtension.png",
