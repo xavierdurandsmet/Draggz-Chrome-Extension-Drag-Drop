@@ -1,5 +1,5 @@
 {
-  "name": "DOM manipulation Example",
+  "name": "Draggz",
   "version": "1.0",
   "description": "Chrome Extension Example for manipulating DOM.",
   "icons": { "16": "iconExtension.png",
